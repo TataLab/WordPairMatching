@@ -7,7 +7,7 @@
 
 
 subjectPath=['/Users/Testing/Documents/Experiments/WordPairMatching/Data/' subjectID '/']; %string together the path
-sourcePath='/Users/Testing/Documents/Experiments/WordPairMatching/Experiment_Code/Word_Database/';
+sourcePath='/Users/Matthew/Documents/MATLAB/WordPairMatching/WPM1/Experiment_Code/Word_Database/';
 
 % %pull in the list of possible words
 % fid=fopen([sourcePath 'wordSource_cleaned.mat'],'r');
@@ -36,9 +36,9 @@ numWords=size(wordArray,1);
 numNonwords=size(nonwordArray,1);
 
 %randomize the order of words and nonwords
-r=randperm(numWords,numWords); %if you pass it the entire length of the array for both arguments it'll return new indices for every element...simple way to shuffle
+r=randsample(numWords,numWords); %if you pass it the entire length of the array for both arguments it'll return new indices for every element...simple way to shuffle
 wordArray(:,1)=wordArray(r,1);
-r=randperm(numNonwords,numNonwords); %if you pass it the entire length of the array for both arguments it'll return new indices for every element...simple way to shuffle
+r=randsample(numNonwords,numNonwords); %if you pass it the entire length of the array for both arguments it'll return new indices for every element...simple way to shuffle
 nonwordArray(:,1)=nonwordArray(r,1);
 
 for i=1:numPairs
