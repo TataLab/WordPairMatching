@@ -8,12 +8,13 @@
 %       new word trials: -choose a word from the nonseenWords list
 %                                -use random words from the seenNonwords list
 %
+%Trials need to be saved in a blocked trial. Hence, we define trial as the
+%output of the function
 %send triggers to netstation like this:
 %-on presentation of the word, send the first three chars of the word plus
 %'  T' for Test
 %-on response, send the first three chars of 'hit', 'miss', 'correct
 %rejection', 'lure' or 'false alarm', along with an 'R' for response.
-
 %build trial vector
 
 %split trials according to old or new word target
@@ -62,7 +63,7 @@ for i=1:numTrials  %there should be 2x as many trials as there are word-nonword 
 
     if(trial(i).old==0) %this is an unseen word trial
         trial(i).topRow=nonseenWords{1};
-        tempRandomSample=randsample(length(nonseenNonwords),3); %choose 3 without replacement
+        tempRandomSample=randperm(length(nonseenNonwords),3); %choose 3 without replacement
         trial(i).bottomRow{1,1}=nonseenNonwords{tempRandomSample(1)};
         trial(i).bottomRow{1,2}=nonseenNonwords{tempRandomSample(2)};
         trial(i).bottomRow{1,3}=nonseenNonwords{tempRandomSample(3)}; 
@@ -84,7 +85,7 @@ for i=1:numTrials  %there should be 2x as many trials as there are word-nonword 
 
     %now shuffle the columns of bottomRow while keeping the rows intact to
     %preserve relationship between items and correct/incorrect flag
-    r=randsample(length(trial(i).bottomRow),length(trial(i).bottomRow));
+    r=randperm(length(trial(i).bottomRow),length(trial(i).bottomRow));
     trial(i).bottomRow=trial(i).bottomRow(:,r');
     
     
@@ -97,7 +98,7 @@ testPhaseOutcomeEvents=cell(numTrials,2);
 
 
 %shuffle the trials
-trial=trial(randsample(length(trial),length(trial)));
+trial=trial(randperm(length(trial),length(trial)));
 
 targetPositionX=0;  %technically these are translations of the drawing position
 targetPositionY=-100;
@@ -151,10 +152,12 @@ for trialNum=1:numTrials
     %for use with Avatar toolbox and EEGLab
     testPhasePresentationEvents{trialNum,1}=trial(trialNum).presentationTrigger;
     testPhasePresentationEvents{trialNum,2}=t;
-    
+    trial(trialNum).TPPE = testPhasePresentationEvents; %record presentation events in the test phase (TPPE is the abbreviation for tesPhasePresentationEvents)
+
     %wait for subject to respond
     while KbCheck; end % Wait until all keys are released.
     [secs, code, delta]=KbWait();
+
     t=tic;
     trial(trialNum).response=find(code)-29; %record what the subject responded - since '1' is element 30, '2' is element 31 etc. we need only to subtract 29 to map onto the .bottomRow vector
     trial(trialNum).outcome=trial(trialNum).bottomRow{2,trial(trialNum).response};  %correct/incorrect code for this trial
@@ -163,7 +166,8 @@ for trialNum=1:numTrials
         %for use with Avatar toolbox and EEGLab
     testPhaseOutcomeEvents{trialNum,1}=[trial(trialNum).outcome(1:3) 'R'];
     testPhaseOutcomeEvents{trialNum,2}=t;
-    
+    trial(trialNum).TPOE = testPhaseOutcomeEvents; %save outcome events in the test phase (TPPE is the abbreviation for tesPhaseOutcomeEvents)
+
     
     display(['sending event code ' [trial(trialNum).outcome(1:3) 'R'] ' to Netstation at time ' num2str(secs)]); 
 
@@ -173,8 +177,7 @@ for trialNum=1:numTrials
 
     %flip it
      [~,~,~,~]=Screen('Flip', targetWindow);
-    
-    
+   
 end
 
 %save out the trial vector

@@ -6,8 +6,13 @@
 %many more)
 
 
+<<<<<<< Updated upstream
 subjectPath=['/Users/Testing/Documents/Experiments/WordPairMatching/Data/' subjectID '/']; %string together the path
 sourcePath='/Users/Testing/Documents/Experiments/WordPairMatching/Experiment_Code/Word_Database/';
+=======
+subjectPath=['/Users/afrooz/Documents/MATLAB/WordPairMatching/Data/' subjectID '/']; %string together the path
+sourcePath='/Users/afrooz/Documents/MATLAB/WordPairMatching/Experiment_Code/Word_Database/';
+>>>>>>> Stashed changes
 
 % %pull in the list of possible words
 % fid=fopen([sourcePath 'wordSource_cleaned.mat'],'r');
@@ -59,11 +64,10 @@ seenWords=wordArray(1:numPairs,1);
 nonseenWords=wordArray(numPairs+1:end,1);
 seenNonwords=nonwordArray(1:numPairs,1);
 nonseenNonwords=nonwordArray(numPairs+1:end,1);
+%Save seen and nonseen nonwords
+Nonwords.seenNonwords=seenNonwords;
+Nonwords.nonseenNonwords=nonseenNonwords;
 
-save('seenWords', 'seenWords');
-save('nonseenWords','nonseenWords');
-save('seenNonwords','seenNonwords');
-save('nonseenNonwords','nonseenNonwords');
 
 
 
