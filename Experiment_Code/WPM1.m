@@ -1,28 +1,39 @@
 %WPM1 is an experiment to test the prediction that slow oscillations correlate
 %with memory performance
 
+%*****************************Initialization ******************************
 %basic experiment parameters
 stimOnTime=5; %seconds, how long to display stimuli
 stimOffTime=1;
 numPairs=20; %how many word - nonword pairs
-numBlocks=4; %how many blocks of word - nonword pairs
+numBlocks=1; %how many blocks of word - nonword pairs
 numRepeats=1; %during learning phase; how many times to show each word/nonword pair
+
 numTrials=2*numPairs; %in the test phase; should be twice the number of pairs to even out new and old words
-alltrials = cell(numBlocks,1); %a cell for saving all the trials
-allNonwords = cell(numBlocks,1); %a cell for saving all nonwords
-allLearnTriggerTime = cell(numBlocks,1); %a cell for saving all events in tne learning phase
+allTrials=cell(numBlocks,1); %a cell for saving all the trials
+allWords=cell(numBlocks,1); %a cell for saving all words
+allNonwords=cell(numBlocks,1); %a cell for saving all nonwords
+allLearnTriggerTime=cell(numBlocks,1); %a cell for saving all events in tne learning phase
+
 eeg=0; %set to 1 to enable eeg triggers sent to Netstation
 
-
+%Defining counters for counting different responses
+hitCounter=0;
+missCounter=0;
+lureCounter=0;
+FACounter=0;%false alarm counter
+CRCounter=0;%correct rejection counter
+%**************************************************************************
 %get the subject ID
 blah = inputdlg('Please enter the subjet ID');
 subjectID=blah{1,1};  %just the string please
 clear blah;
-for blockNum = 1:numBlocks
+for blockNum=1:numBlocks
     %for this subject build randomized lists of words and nonwords and a pair
     %structure, store them in the subject's data file
-    BuildWordLists;
-    allNonwords{blockNum,1} = Nonwords;%save the nonwords just in case
+    BuildWordListNonwords;
+    allWords{blockNum,1}=words; %save the words just in case
+    allNonwords{blockNum,1}=nonwords; %save the nonwords just in case
     %%%%%%%%
     %some setup for PTB
     %%%%%%%%%
@@ -102,9 +113,9 @@ for blockNum = 1:numBlocks
     %%run the trials
     %%%%%%%%%%%%%%%%%                                                                    
     RunLearningPhase;
-    allLearnTriggerTime{blockNum,1} = learnTriggerTime; %save the trigger and the time in the learning phase for each block;
+    allLearnTriggerTime{blockNum,1} = learningPhaseEvents; %save the trigger and the time in the learning phase for each block;
     RunTestPhase;
-    alltrials{blockNum,1} = trial; %save the trail for each block
+    allTrials{blockNum,1} = trial; %save the trail for each block
     
     %Ask the subject to press 'enter' for going to the next block
     if blockNum < numBlocks %we don't want to show the instructions at the end of the final block
@@ -112,6 +123,7 @@ for blockNum = 1:numBlocks
     DrawFormattedText(targetWindow,instructionsForNextBlock,learningWordPositionX,learningWordPositionY,0,81);
     Screen('Flip', targetWindow);
     
+
     RestrictKeysForKbCheck(40); %only allow responses to 'enter' key 
     commandwindow;  %direct all the key presses to the command window so they don't cause havoc (alternatively use ListenChar() but this has weird and unpredictable behaviour)
     %wait for subject to press enter and continue to the next block
@@ -119,13 +131,20 @@ for blockNum = 1:numBlocks
     [secs, code, delta]=KbWait();
     end
 end
+PerformanceComp;
 
+    
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %save out the time data for later use with EEGLab and the Avatar toolbox
 save('stimOnTime')
 save('stimOffTime')
+save('allTrials')
+save('allWords')
+save('allNonwords')
+save('allLearnTriggerTime')
+save('performanceVector')
 
 %%%%% cleanup
 NetStation('StopRecording');
