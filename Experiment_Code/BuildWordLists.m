@@ -6,13 +6,10 @@
 %many more)
 
 
-<<<<<<< Updated upstream
 subjectPath=['/Users/Testing/Documents/Experiments/WordPairMatching/Data/' subjectID '/']; %string together the path
 sourcePath='/Users/Testing/Documents/Experiments/WordPairMatching/Experiment_Code/Word_Database/';
-=======
-subjectPath=['/Users/afrooz/Documents/MATLAB/WordPairMatching/Data/' subjectID '/']; %string together the path
-sourcePath='/Users/afrooz/Documents/MATLAB/WordPairMatching/Experiment_Code/Word_Database/';
->>>>>>> Stashed changes
+
+
 
 % %pull in the list of possible words
 % fid=fopen([sourcePath 'wordSource_cleaned.mat'],'r');

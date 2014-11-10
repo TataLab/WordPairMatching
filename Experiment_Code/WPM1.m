@@ -77,7 +77,7 @@ for blockNum = 1:numBlocks
     %set some text parameters
     % Select specific text font, style and size:
     Screen('TextFont',targetWindow, 'Arial');
-    Screen('TextSize',targetWindow, 20);
+    Screen('TextSize',targetWindow, 16);
     Screen('TextStyle', targetWindow, 1+2);
 
     instructionsForLearning='Try to remember which nonword matches each word.  Keep your eyes on the centre of the screen.';
@@ -90,6 +90,7 @@ for blockNum = 1:numBlocks
     %%%%%
     %%setup and initialize connection with Netstation
     %%%
+    
     if(eeg)
     netstationHost='142.66.137.15';
     NetStation('Connect',netstationHost); %initialize a connection to the acquisition software
