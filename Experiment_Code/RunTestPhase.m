@@ -93,8 +93,8 @@ end
 
 %for recording latencies of events for use with the Avatar MATLAB toolbox
 %and EEGLab
-testPhasePresentationEvents=cell(numTrials,2); 
-testPhaseOutcomeEvents=cell(numTrials,2); 
+testPhasePresentationEvents=cell(1,2); 
+testPhaseOutcomeEvents=cell(1,2); 
 
 
 %shuffle the trials
@@ -150,8 +150,8 @@ for trialNum=1:numTrials
     display(['sending event code ' trial(trialNum).presentationTrigger ' to Netstation at time ' num2str(stimOnsetTime)]); 
     
     %for use with Avatar toolbox and EEGLab
-    testPhasePresentationEvents{trialNum,1}=trial(trialNum).presentationTrigger;
-    testPhasePresentationEvents{trialNum,2}=t;
+    testPhasePresentationEvents{1}=trial(trialNum).presentationTrigger;
+    testPhasePresentationEvents{2}=t;
     trial(trialNum).TPPE = testPhasePresentationEvents; %record presentation events in the test phase (TPPE is the abbreviation for tesPhasePresentationEvents)
 
     %wait for subject to respond
@@ -164,8 +164,8 @@ for trialNum=1:numTrials
     
     NetStation('Event', [trial(trialNum).outcome(1:3) 'R'], secs);  %does that work!!?? Yes! Secs is in the same time base as the return values of Screen('flip');
         %for use with Avatar toolbox and EEGLab
-    testPhaseOutcomeEvents{trialNum,1}=[trial(trialNum).outcome(1:3) 'R'];
-    testPhaseOutcomeEvents{trialNum,2}=t;
+    testPhaseOutcomeEvents{1}=[trial(trialNum).outcome(1:3) 'R'];
+    testPhaseOutcomeEvents{2}=t;
     trial(trialNum).TPOE = testPhaseOutcomeEvents; %save outcome events in the test phase (TPPE is the abbreviation for tesPhaseOutcomeEvents)
 
     
