@@ -17,11 +17,10 @@ Screen('DrawTexture',targetWindow,aBox.index,[], fixationDestination );
 DrawFormattedText(targetWindow,'go',learningWordPositionX,learningWordPositionY);
 Screen('Flip', targetWindow);
 WaitSecs(2);
-
 for repeat=1:numRepeats
     
     %shuffle the sequence of pairs
-    randSequence=randsample(length(pair),length(pair));
+    randSequence=randperm(length(pair),length(pair));
     pair=pair(randSequence);
     
     %loop and flip
@@ -42,7 +41,6 @@ for repeat=1:numRepeats
         
         learningPhaseEvents{(repeat-1)*3+pairNum,1}=pair(pairNum).trigger; %record events for use with EEGLab and Avatar toolbox
         learningPhaseEvents{(repeat-1)*3+pairNum,2}=t; %record the time for later epoching
-        
         display(['sending event code ' pair(pairNum).trigger ' to Netstation at time ' num2str(stimOnsetTime)]); 
 
         
