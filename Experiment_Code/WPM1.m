@@ -5,7 +5,7 @@
 stimOnTime=5; %seconds, how long to display stimuli
 stimOffTime=1;
 numPairs=3; %how many word - nonword pairs
-numRepeats=3; %during learning phase; how many times to show each word/nonword pair
+numRepeats=1; %during learning phase; how many times to show each word/nonword pair
 numTrials=6; %in the test phase; should be twice the number of pairs to even out new and old words
 
 eeg=0; %set to 1 to enable eeg triggers sent to Netstation
